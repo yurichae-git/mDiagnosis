@@ -2,7 +2,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 import time, re, random
 from playwright.sync_api import Playwright, sync_playwright, expect
-from config import car_numbers, car_type
+from config import car_numbers, car_type, owner
 
 
 
@@ -58,7 +58,7 @@ def Reservation(playwright: Playwright) -> None:
     page.get_by_label("소유자명").select_option("직접입력")
 
     page.get_by_role("textbox", name="소유자명 입력").click()
-    page.get_by_role("textbox", name="소유자명 입력").fill("채유리")
+    page.get_by_role("textbox", name="소유자명 입력").fill(owner)
     logging.info("PASS : 소유자명 입력")
 
     page.locator("div").filter(has_text=re.compile(r"^조회$")).get_by_role("button").click()
