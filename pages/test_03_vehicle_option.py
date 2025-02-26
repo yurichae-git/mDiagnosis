@@ -7,6 +7,8 @@ from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from config import car_numbers, car_type
 
 
+
+
 def VehicleOption(playwright: Playwright) -> None:
     ''' browser = playwright.chromium.launch(headless=False)
         context = browser.new_context()
