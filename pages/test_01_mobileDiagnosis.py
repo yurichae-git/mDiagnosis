@@ -73,9 +73,14 @@ def Reservation(playwright: Playwright) -> None:
         selected_manufacturer = manufacturer.evaluate("el => el.options[el.selectedIndex].text")
         selected_detail_model = detail_model.evaluate("el => el.options[el.selectedIndex].text")
         if selected_manufacturer and selected_manufacturer != "제조사":
-            '''if selected_detail_model and selected_detail_model != "세부모델":
-                detail_model.select_option("001")
-                logging.info("PASS : 세부모델 조회 안된 경우 - 옵션 1번 선택")'''
+            if selected_detail_model and selected_detail_model != "세부모델":
+                # 세부모델이 조회 된 경우 옵션 리스트를 가져와서 첫번째 옵션을 선택하고, 없을 땐 에러로그
+                options = detail_model.evaluate("el => Array.from(el.options).map(o => o.value)")
+                if options and len(options) > 0:
+                    detail_model.select_option(options[0])
+                    logging.info(f"PASS : 세부모델 조회 안된 경우 - 첫 번째 옵션 '{options[0]}' 선택")
+                else:
+                    logging.warning("PASS : 세부모델 옵션이 없음")
             logging.info(f"PASS : 제조사 / 모델 조회 성공 - {selected_manufacturer}")
         else:
             if car_type == "국산":
