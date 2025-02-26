@@ -9,7 +9,6 @@ from config import car_numbers, car_type, owner
 
 
 
-
 def Reservation(playwright: Playwright) -> None:
     ''' browser = playwright.chromium.launch(headless=False)
                             context = browser.new_context()
