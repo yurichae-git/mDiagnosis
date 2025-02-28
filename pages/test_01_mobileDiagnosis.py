@@ -2,7 +2,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 import time, re, random
 from playwright.sync_api import Playwright, sync_playwright, expect
-from config import car_numbers, car_type, owner
+from config import car_numbers, car_type, owner, dealer_id
 
 
 
@@ -40,7 +40,7 @@ def Reservation(playwright: Playwright) -> None:
 
     page.get_by_text("이름 조회아이디 조회").click()
     page.get_by_role("textbox", name="아이디").click()
-    page.get_by_role("textbox", name="아이디").fill("yuri_C16")
+    page.get_by_role("textbox", name="아이디").fill(dealer_id)
     page.locator("#btnSearch").click()
     logging.info("PASS : 제휴딜러 조회")
     time.sleep(3)
