@@ -1,6 +1,6 @@
 import re
 from playwright.sync_api import Playwright, sync_playwright, expect
-from config import car_numbers, car_type, owner
+from config import car_numbers, car_type, owner, dealer_id
 
 
 # 작업 1 : 차량 번호 변수로 찾는 부분
@@ -18,7 +18,7 @@ def vehicleVerification(playwright: Playwright) -> None:
     page1.get_by_role("button", name="로그인하면 더욱 편리합니다").click()
     page1.get_by_role("link", name="encar ci").nth(1).click()
     page1.get_by_role("textbox", name="아이디").click()
-    page1.get_by_role("textbox", name="아이디").fill("yuri_C16")
+    page1.get_by_role("textbox", name="아이디").fill(dealer_id)
     page1.get_by_role("textbox", name="아이디").press("Tab")
     page1.get_by_role("button", name="전체삭제").press("Tab")
     page1.get_by_role("textbox", name="비밀번호").fill("1")

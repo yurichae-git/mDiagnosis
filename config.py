@@ -6,3 +6,4 @@
 car_numbers = ["363나8564"]
 car_type = "국산"
 owner = "채유리"
+dealer_id = "yuri_C17"
