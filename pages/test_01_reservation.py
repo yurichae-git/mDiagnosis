@@ -1,7 +1,6 @@
 import logging
 logging.basicConfig(level=logging.INFO)
 import time, re, random
-##from playwright.sync_api import Playwright, sync_playwright, expect
 from config import car_numbers, car_type, owner, dealer_id
 
 
@@ -12,32 +11,32 @@ def Reservation(page, car_numbers):
 
 
     page.get_by_role("link", name="현장 예약").click()
-    logging.info(f"PASS : 현장예약 진입 - {car_numbers}")
+    logging.info(f"PASS : 현장예약 시작 - {car_numbers}")
 
-    page.get_by_text("이름 조회아이디 조회").click()
+    page.get_by_text("아이디 조회").click()
     page.get_by_role("textbox", name="아이디").click()
     page.get_by_role("textbox", name="아이디").fill(dealer_id)
     page.locator("#btnSearch").click()
-    logging.info("PASS : 제휴딜러 조회")
+    logging.info("PASS : 현장예약 > 아이디 조회")
     time.sleep(3)
 
 
     ##국산/수입/화물 선택
     page.get_by_text(car_type, exact=True).click()
-    logging.info("PASS : 국산/수입 선택 ")
+    logging.info("PASS : 현장예약 > 차량정보 > 국산/수입 선택 ")
 
     page.get_by_role("textbox", name="차량번호").click()
     page.get_by_role("textbox", name="차량번호").fill(car_numbers)
-    logging.info("PASS : 차량번호 입력")
+    logging.info("PASS : 현장예약 > 차량정보 > 차량번호 입력")
 
     page.get_by_label("소유자명").select_option("직접입력")
 
     page.get_by_role("textbox", name="소유자명 입력").click()
     page.get_by_role("textbox", name="소유자명 입력").fill(owner)
-    logging.info("PASS : 소유자명 입력")
+    logging.info("PASS : 현장예약 > 차량정보 > 소유자명 입력")
 
     page.locator("div").filter(has_text=re.compile(r"^조회$")).get_by_role("button").click()
-    logging.info(f"PASS : 차량정보 조회 완료 - {car_numbers}")
+    logging.info(f"PASS : 현장예약 > 차량정보 > 차량정보 조회 완료 - {car_numbers}")
     time.sleep(15)
 
     # 제조사/모델 조회 실패 케이스
@@ -54,59 +53,60 @@ def Reservation(page, car_numbers):
                 options = detail_model.evaluate("el => Array.from(el.options).map(o => o.value)")
                 if options and len(options) > 0:
                     detail_model.select_option(options[0])
-                    logging.info(f"PASS : 세부모델 조회 안된 경우 - 첫 번째 옵션 '{options[0]}' 선택")
+                    logging.info(f"PASS : 현장예약 > 제조사 / 모델 > 세부모델 조회 안된 경우 - 첫 번째 옵션 '{options[0]}' 선택")
                 else:
                     logging.warning("PASS : 세부모델 옵션이 없음")
-            logging.info(f"PASS : 제조사 / 모델 조회 성공 - {selected_manufacturer}")
-        else:
+            logging.info(f"PASS : 현장예약 > 제조사 / 모델 > 조회 성공 - {selected_manufacturer}")
+        else: # 제조사/모델 조회 안된 경우 지정 선택
             if car_type == "국산":
-                logging.info("PASS : 제조사 / 모델 미확인 차량")
+                logging.info("PASS : 현장예약 > 제조사 / 모델 > 미확인 차량")
                 page.get_by_label("제조사").select_option("현대")
-                logging.info("PASS : 제조사 선택 - 현대")
+                logging.info("PASS : 현장예약 > 제조사 / 모델 > 제조사 선택 - 현대")
                 time.sleep(1)
                 page.get_by_label("모델", exact=True).select_option("베뉴")
-                logging.info("PASS : 모델 선택 - 베뉴")
+                logging.info("PASS : 현장예약 > 제조사 / 모델 > 모델 선택 - 베뉴")
                 time.sleep(1)
                 page.get_by_label("세부모델").select_option("베뉴(19년~현재)")
-                logging.info("PASS : 세부모델 선택 - 베뉴(19년~현재)")
+                logging.info("PASS : 현장예약 > 제조사 / 모델 > 세부모델 선택 - 베뉴(19년~현재)")
                 time.sleep(1)
             elif car_type == "수입":
                 logging.info("PASS : 제조사 / 모델 미확인 차량")
                 page.get_by_label("제조사").select_option("BMW")
-                logging.info("PASS : 제조사 선택 - BMW")
+                logging.info("PASS : 현장예약 > 제조사 / 모델 > 제조사 선택 - BMW")
                 time.sleep(1)
                 page.get_by_label("모델", exact=True).select_option("7시리즈")
-                logging.info("PASS : 모델 선택 - 7시리즈")
+                logging.info("PASS : 현장예약 > 제조사 / 모델 > 모델 선택 - 7시리즈")
                 time.sleep(1)
                 page.get_by_label("세부모델").select_option("7시리즈 (G70)(22년~현재)")
-                logging.info("PASS : 세부모델 선택 - 7시리즈 (G70)(22년~현재)")
+                logging.info("PASS : 현장예약 > 제조사 / 모델 > 세부모델 선택 - 7시리즈 (G70)(22년~현재)")
                 time.sleep(1)
             else:
-                logging.info("FAIL : 차량유형이 국산/수입이 아님")
+                logging.info("FAIL : 현장예약 > 제조사 / 모델 > 차량 유형이 국산/수입이 아님")
     else:
-        logging.info("FAIL : 제조사 요소 확인 불가")
+        logging.info("FAIL : 현장예약 > 제조사 / 모델 > 제조사 요소 확인 불가")
 
 
     page.get_by_text("진단등록").click()
-    logging.info("PASS : 상품 - 진단등록 선택")
+    logging.info("PASS : 현장예약 > 상품 - 진단등록 선택")
     page.get_by_text("홈서비스 광고이용권").click()
-    logging.info("PASS : 상품 - 홈서비스 광고이용권 선택")
+    logging.info("PASS : 현장예약 > 상품 - 홈서비스 광고이용권 선택")
 
 
 
 
     page.get_by_role("button", name="등록", exact=True).click()
-    logging.info("PASS : [등록] 버튼 선택")
+    logging.info("PASS : 현장예약 > 등록 선택")
     time.sleep(3)
 
     confirmPopup = page.get_by_role("button", name="확인")
     confirmPopup.wait_for(state="visible", timeout=5000)
     if confirmPopup.count() > 0 :
         confirmPopup.click()
-        logging.info("PASS : [확인] 버튼 선택")
+        logging.info("PASS : 현장예약 > 확인 팝업 > 확인 버튼 선택")
     else :
-        logging.info("FAIL : 확인 팝업 미노출")
+        logging.info("FAIL : 현장예약 > 확인 팝업 미노출")
 ##        page.goto("https://tdiag.encar.io/revList/155?tab=0&inpCarNo=3902&page=1")
     time.sleep(5)
 
+    logging.info(f"PASS : 현장예약 완료 - {car_numbers}")
 
