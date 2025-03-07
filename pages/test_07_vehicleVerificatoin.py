@@ -33,7 +33,7 @@ def vehicleVerification(playwright: Playwright) -> None:
     page2.get_by_role("link", name="마이페이지").click()
     page2.get_by_role("link", name="판매관리").click()
     page2.goto("https://mnew.encar.com/my/my_index.do?method=my_regcar&produce=N")
-    page2.get_by_role("button", name="하루동안 보지 않기").click()
+    page2.get_by_role("button", name="하루동안 보지 않기").click()소
     page2.get_by_role("link", name="차량 검수 등록").first.click()
     page2.get_by_role("button", name="자세히보기").first.click()
     page2.locator("label").filter(has_text="전면 사진 등록").click()

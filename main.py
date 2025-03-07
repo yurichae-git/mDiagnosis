@@ -8,15 +8,16 @@ from playwright.sync_api import sync_playwright
 
 
 
+
 def main():
     # Use a breakpoint in the code line below to debug your script.
     with sync_playwright() as playwright:
 
 
         Reservation(playwright)
-        VehicleInfo(playwright)
-        VehicleOption(playwright)
-        Diagnosis(playwright)
+        #VehicleInfo(playwright)
+        #VehicleOption(playwright)
+        #Diagnosis(playwright)
 
 
 

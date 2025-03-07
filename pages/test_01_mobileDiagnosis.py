@@ -30,9 +30,11 @@ def Reservation(playwright: Playwright) -> None:
     page.get_by_role("link", name="로그인").click()
     logging.info("PASS : 로그인")
 
-    page.get_by_role("link", name="변경").click()
+    page.get_by_role("button", name="확장메뉴열기").click()
+    page.get_by_role("link", name="지점 변경").click()
+    page.get_by_role("button", name="서울").click()
     page.get_by_text("본사 광고지원센터").click()
-    page.get_by_role("button", name="확인").click()
+    page.get_by_role("button", name="저장").click()
     logging.info("PASS : 지점 변경")
 
     page.get_by_role("link", name="현장 예약").click()
