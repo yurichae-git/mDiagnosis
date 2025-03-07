@@ -1,61 +1,20 @@
 import logging
 logging.basicConfig(level=logging.INFO)
 import time
-import re
-from playwright.sync_api import Playwright, sync_playwright, expect
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
-from config import car_numbers, car_type
 
 
 
-def VehicleInfo(playwright: Playwright) -> None:
-    ''' browser = playwright.chromium.launch(headless=False)
-        context = browser.new_context()
-    '''
-    browser = playwright.chromium.launch(
-        headless=False,  # GUI 모드
-        args=["--start-fullscreen"]  # 전체 화면 모드
-    )
-    ##iphone_12 = playwright.devices['iPhone 12']
-    # 페이지 생성 및 모바일 환경 설정
-    context = browser.new_context(
-        viewport={'width': 800, 'height': 1200},
-        device_scale_factor=2
-    )
+def VehicleInfo(page, car_numbers):
 
-
-    page = context.new_page()
-    page.goto("https://tdiag.encar.io/dev_login")
-    page.get_by_role("link", name="로그인").click()
-    logging.info("PASS : 로그인")
-
-    page.get_by_role("link", name="변경").click()
-    page.get_by_text("본사 광고지원센터").click()
-    page.get_by_role("button", name="확인").click()
-    logging.info("PASS : 지점 변경")
-
-
-## 차량번호
-    for car_number in car_numbers:
-        try:
-            page.get_by_text(car_number, exact=True).click()
-            logging.info(f"PASS : 차량 번호 {car_number} 클릭 성공")
-            break  # 성공적으로 클릭했다면 루프 종료
-        except:
-            logging.warning(f"FAIL : 차량 번호 {car_number} 클릭 실패")
-
-    # 모든 차량 번호에 대해 클릭을 시도했지만 실패한 경우
-    else:
-        logging.error("FAIL : 모든 차량 번호 클릭 시도 실패")
-        # 여기에 오류 처리 로직 추가
-    time.sleep(3)
-
+    # 진단 전 차량 선택
+    page.get_by_text(car_numbers, exact=True).click()
+    logging.info(f"PASS : 예약리스트 > 차량 번호 {car_numbers} 클릭 성공")
 
 
     page.get_by_role("link", name="차량정보").click()
-##    page.get_by_role("tab", name="차량정보", exact=False).click(force=True)
-    time.sleep(3)
-    logging.info("PASS : 차량정보 tab 진입 성공")
+    logging.info(f"PASS : 차량정보 tab 진입 - {car_numbers}")
+    time.sleep(5)
 
     ##차대번호 없는경우, 반절 있는 경우 입력하기
     '''try:
@@ -77,15 +36,15 @@ def VehicleInfo(playwright: Playwright) -> None:
 
     page.locator("input#vehicleIdNo[name='vehicleIdNo'][placeholder='차대번호 입력']").click()
     page.locator("input#vehicleIdNo[name='vehicleIdNo'][placeholder='차대번호 입력']").fill("KMHK3816ZZZZZZZZZ")
-    logging.info("PASS : 차대번호 입력")
+    logging.info("PASS : 차량정보 tab > 차대번호 입력")
 
     ## 차대번호 확인버튼 노출유무 예외처리
     identification_number_button = page.get_by_role("button", name="확인")
     if identification_number_button.count() > 0:
         identification_number_button.click()
-        logging.info("PASS : 차대번호 입력 - 확인 버튼 선택")
+        logging.info("PASS : 차량정보 tab > 차대번호 > 확인 버튼 선택")
     else:
-        logging.info("PASS : 차대번호 입력 - 확인 버튼 미노출")
+        logging.info("PASS : 차량정보 tab > 차대번호 > 확인 버튼 미노출")
 
 
     # 연식
@@ -94,14 +53,14 @@ def VehicleInfo(playwright: Playwright) -> None:
         if year.count() > 0:
             current_value = year.input_value()
             if current_value and current_value != "yyyymm":
-                logging.info(f"PASS: 연식 값이 있음: {current_value}")
+                logging.info(f"PASS : 차량정보 tab > 연식 - {current_value}")
             else:
                 year.fill("201901")
-                logging.info("PASS: 연식 '201901' 입력 완료")
+                logging.info("PASS : 차량정보 tab > 연식 - '201901' 입력 완료")
         else:
-            logging.info("PASS: 연식 요소를 찾을 수 없음")
+            logging.info("FAIL : 차량정보 tab > 연식 - 요소를 찾을 수 없음")
     except Exception as e:
-        logging.error(f"FAIL: 연식 요소 처리 중 오류 발생: {str(e)}")
+        logging.error(f"FAIL : 차량정보 tab > 연식 - 요소 처리 중 오류 발생 {str(e)}")
 
     # 형식년도
     try:
@@ -109,20 +68,20 @@ def VehicleInfo(playwright: Playwright) -> None:
         if formalYear.count() > 0:
             current_value = formalYear.input_value()
             if current_value and current_value != "yyyy":
-                logging.info(f"PASS: 형식년도 값이 있음: {current_value}")
+                logging.info(f"PASS : 차량정보 tab > 형식년도 - {current_value}")
             else:
                 formalYear.fill("2019")
-                logging.info("PASS: 형식년도 '2019' 입력 완료")
+                logging.info("PASS : 차량정보 tab > 형식년도 - '2019' 입력 완료")
         else:
-            logging.info("PASS: 형식년도 요소를 찾을 수 없음")
+            logging.info("FAIL : 차량정보 tab > 형식년도 - 요소를 찾을 수 없음")
     except Exception as e:
-        logging.error(f"FAIL: 형식년도 요소 처리 중 오류 발생: {str(e)}")
+        logging.error(f"FAIL : 차량정보 tab > 형식년도 요소 처리 중 오류 발생 {str(e)}")
 
 
 
     # 등급/세부등급 - 진입(연식/형식년도 없으면 진입 불가함)
     page.get_by_role("link", name="등급/세부등급 선택").click()
-    logging.info("PASS : 등급/세부등급 선택 진입")
+    logging.info("PASS : 차량정보 tab > 등급/세부등급 진입")
 
 
     ## 등급/세부등급 - 진입 시 팝업 뜨는 케이스 예외처리
@@ -133,12 +92,12 @@ def VehicleInfo(playwright: Playwright) -> None:
 
         # 팝업이 나타나면 클릭
         notiPopup.click()
-        logging.info("PASS : 주의사항 팝업 확인")
+        logging.info("PASS : 차량정보 tab > 등급/세부등급 > 주의사항 팝업 확인")
     except PlaywrightTimeoutError:
-        logging.info("PASS : 주의사항 팝업 미노출")
+        logging.info("PASS : 차량정보 tab > 등급/세부등급 > 주의사항 팝업 미노출")
 
     page.get_by_role("button", name="직접 선택").click()
-    logging.info("PASS : 직접 선택 진입")
+    logging.info("PASS : 차량정보 tab > 등급/세부등급 > 직접 선택 진입")
     page.once("dialog", lambda dialog: dialog.dismiss())
 
 
@@ -148,80 +107,86 @@ def VehicleInfo(playwright: Playwright) -> None:
         grade_select.wait_for(state="visible", timeout=5000)
         if grade_select.count() > 0:
             grade_select.select_option("001")
-            logging.info("PASS : '등급' 옵션 선택 완료")
+            logging.info("PASS : 차량정보 tab > 등급/세부등급 > 직접 선택 > 등급 - 첫번째 옵션 선택 완료")
         else:
-            logging.info("PASS : '등급' 이 선택된 상태")
+            logging.info("PASS : 차량정보 tab > 등급/세부등급 > 직접 선택 > 등급 - 옵션 선택된 상태")
     except Exception as e:
-        logging.error(f"FAIL : '등급' 옵션 선택 중 오류 발생: {str(e)}")
+        logging.error(f"FAIL : 차량정보 tab > 등급/세부등급 > 직접 선택 > 등급 - 옵션 선택 중 오류 발생: {str(e)}")
+
+    time.sleep(2)
 
 
-
-    ##  page.get_by_label("세부등급").select_option("001") ## 라벨이름이 세부등ㅇ급이 아니면 로그만 남기기
+    ##  page.get_by_label("세부등급").select_option("001") ## 라벨이름이 세부등급이 아니면 로그만 남기기
     try:
         grade_detail_select = page.get_by_label("세부등급", exact=True)
         if grade_detail_select.count() > 0:
             # select 요소의 옵션 개수 확인
             options_count = grade_detail_select.evaluate("el => el.options.length")
-            if options_count > 1:  # 첫 번째 옵션(보통 "선택" 등)을 제외하고 옵션이 있는지 확인
+            if options_count > 1:  # 첫 번째 옵션(default)을 제외하고 옵션이 있는지 확인
                 grade_detail_select.select_option("001")
-                logging.info("PASS : '세부등급' 옵션 선택 완료 (001)")
+                logging.info(f"PASS : 차량정보 tab > 등급/세부등급 > 직접 선택 > 세부등급 - 첫번쨰 옵션 선택 완료 {options_count}")
+
             else:
-                logging.info("PASS : '세부등급' 선택할 수 있는 옵션이 없음")
+                logging.info(f"PASS : 차량정보 tab > 등급/세부등급 > 직접 선택 > 세부등급 - 선택할 수 있는 옵션이 없음{options_count}")
         else:
-            logging.info("PASS : '세부등급' 요소를 찾을 수 없음")
+            logging.info("FAIL : 차량정보 tab > 등급/세부등급 > 직접 선택 > 세부등급 - 요소를 찾을 수 없음")
     except Exception as e:
-        logging.error(f"FAIL : '세부등급' 옵션 선택 중 오류 발생: {str(e)}")
+        logging.error(f"FAIL : 차량정보 tab > 등급/세부등급 > 직접 선택 > 세부등급 - 옵션 선택 중 오류 발생 {str(e)}")
 
 
     page.once("dialog", lambda dialog: dialog.dismiss())
     page.get_by_role("button", name="저장").click()
-    logging.info("PASS : 등급/세부등급 저장")
+    logging.info("PASS : 차량정보 tab > 등급/세부등급 > 직접 선택 > 저장")
 
     page.get_by_role("spinbutton", name="판매가격").click()
     page.get_by_role("spinbutton", name="판매가격").fill("3333")
-    logging.info("PASS : 판매가격 입력")
+    logging.info("PASS : 차량정보 tab > 판매가격 입력")
 
     page.get_by_label("연료").select_option("가솔린")
-    logging.info("PASS : 연료 선택")
+    logging.info("PASS : 차량정보 tab > 연료 선택")
 
     page.get_by_role("spinbutton", name="배기량").click()
     page.get_by_role("spinbutton", name="배기량").fill("2999")
-    logging.info("PASS : 배기량 입략")
+    logging.info("PASS : 차량정보 tab > 배기량 입략")
 
     page.get_by_label("포토존 색상").select_option("WHITE")
-    logging.info("PASS : 포토존 색상 선택")
+    logging.info("PASS : 차량정보 tab > 포토존 색상 선택")
 
     page.get_by_role("listitem").filter(has_text="화이트").get_by_role("link").click()
     page.get_by_text("은색투톤").click()
     page.get_by_role("button", name="확인").click()
-    logging.info("PASS : 외관 색상 선택")
+    logging.info("PASS : 차량정보 tab > 외관 색상 선택")
 
     page.get_by_label("변속기").select_option("오토")
-    logging.info("PASS : 변속기 선택")
+    logging.info("PASS : 차량정보 tab > 변속기 선택")
 
     page.get_by_role("link", name="선택").click()
     page.locator("label").filter(has_text="빨간색").click()
     page.get_by_role("button", name="확인").click()
-    logging.info("PASS : 시트 색상 선택")
+    logging.info("PASS : 차량정보 tab > 시트 색상 선택")
 
     page.get_by_role("spinbutton", name="주행거리").click()
     page.get_by_role("spinbutton", name="주행거리").fill("2345")
-    logging.info("PASS : 주행거리 입력")
+    logging.info("PASS : 차량정보 tab > 주행거리 입력")
     time.sleep(1)
 
     page.get_by_role("button", name="차량정보 완료").click()
-    logging.info("PASS : [차량정보 완료] 버튼 선택")
-    time.sleep(3)
-
-    '''    page.get_by_role("button", name="확인").click()
-    logging.info("PASS : [확인] 버튼 선택")
+    logging.info("PASS : 차량정보 tab > 차량정보 완료 버튼 선택")
     time.sleep(5)
-    '''
-    logging.info(f"PASS : 차량정보 Tab 완료")
 
+    confirmPopup = page.locator('xpath=//*[@id="Header__Xpu4w"]/button/span')
+    confirmPopup.wait_for(state="visible", timeout=10000)
+    if confirmPopup.count() > 0 :
+        page.locator('xpath=//*[@id="container"]/div[5]/div/div/button').click() #팝업 내 확인 버튼
+        logging.info("PASS : 차량정보 tab > 확인 팝업 > 확인 버튼 선택")
+    else :
+        logging.info("FAIL : 차량정보 tab > 확인 팝업 미노출 ")
+    time.sleep(5)
 
-    context.close()
-    browser.close()
+    logging.info(f"PASS : 차량정보 Tab 완료 - {car_numbers}")
 
-with sync_playwright() as playwright:
-    VehicleInfo(playwright)
+    # 모두 완료 후 헤더 차량번호를 눌러 예약리스트로 되돌아가기
+    page.get_by_text(car_numbers, exact=True).click()
+    logging.info("PASS : 예약리스트 이동")
+    time.sleep(2)
+
