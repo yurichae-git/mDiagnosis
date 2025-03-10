@@ -5,15 +5,15 @@ from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
 
 
-def VehicleInfo(page, car_numbers):
+def VehicleInfo(page, car_number):
 
     # 진단 전 차량 선택
-    page.get_by_text(car_numbers, exact=True).click()
-    logging.info(f"PASS : 예약리스트 > 차량 번호 {car_numbers} 클릭 성공")
+    page.get_by_text(car_number, exact=True).click()
+    logging.info(f"PASS : 예약리스트 > 차량 번호 {car_number} 클릭 성공")
 
 
     page.get_by_role("link", name="차량정보").click()
-    logging.info(f"PASS : 차량정보 tab 진입 - {car_numbers}")
+    logging.info(f"PASS : 차량정보 tab 진입 - {car_number}")
     time.sleep(5)
 
     ##차대번호 없는경우, 반절 있는 경우 입력하기
@@ -183,10 +183,10 @@ def VehicleInfo(page, car_numbers):
         logging.info("FAIL : 차량정보 tab > 확인 팝업 미노출 ")
     time.sleep(5)
 
-    logging.info(f"PASS : 차량정보 Tab 완료 - {car_numbers}")
+    logging.info(f"PASS : 차량정보 Tab 완료 - {car_number}")
 
     # 모두 완료 후 헤더 차량번호를 눌러 예약리스트로 되돌아가기
-    page.get_by_text(car_numbers, exact=True).click()
+    page.get_by_text(car_number, exact=True).click()
     logging.info("PASS : 예약리스트 이동")
     time.sleep(2)
 

@@ -6,15 +6,15 @@ from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
 
 
-def VehicleOption(page, car_numbers):
+def VehicleOption(page, car_number):
 
     # 진단 전 차량 선택
-    page.get_by_text(car_numbers, exact=True).click()
-    logging.info(f"PASS : 예약리스트 > 차량 번호 {car_numbers} 클릭 성공")
+    page.get_by_text(car_number, exact=True).click()
+    logging.info(f"PASS : 예약리스트 > 차량 번호 {car_number} 클릭 성공")
 
 
     page.get_by_role("link", name="옵션").click()
-    logging.info(f"PASS : 옵션 tab 진입 - {car_numbers}")
+    logging.info(f"PASS : 옵션 tab 진입 - {car_number}")
 
 
     try:
@@ -35,9 +35,9 @@ def VehicleOption(page, car_numbers):
     logging.info("PASS : 옵션 tab > 옵션 완료 > 완료 팝업 > 확인 버튼 선택")
     time.sleep(5)
 
-    logging.info(f"PASS : 옵션 Tab 완료 - {car_numbers}")
+    logging.info(f"PASS : 옵션 Tab 완료 - {car_number}")
 
     # 모두 완료 후 헤더 차량번호를 눌러 예약리스트로 되돌아가기
-    page.get_by_text(car_numbers, exact=True).click()
+    page.get_by_text(car_number, exact=True).click()
     logging.info("PASS : 예약리스트 이동")
     time.sleep(2)

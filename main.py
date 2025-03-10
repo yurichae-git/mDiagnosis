@@ -15,23 +15,15 @@ def main():
         context = browser.new_context(viewport={'width': 800, 'height': 1200}, device_scale_factor=2)
         page = context.new_page()
 
-        # test_00_login.py 함수
         Login(page)
 
 
-        from config import car_numbers  # config.py 변수
+        from config import car_numbers
         for car_number in car_numbers:
             try:
-                # test_01_reservation.py 함수
                 Reservation(page, car_number)
-
-                # test_02_vehicle_info.py 함수
                 VehicleInfo(page, car_number)
-
-                # test_03_vehicle_option.py 함수
                 VehicleOption(page, car_number)
-
-                # test_04_diagnosis.py 함수
                 Diagnosis(page, car_number)
 
 
