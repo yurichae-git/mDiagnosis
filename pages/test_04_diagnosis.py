@@ -5,7 +5,7 @@ import time
 
 
 
-def Diagnosis(page, car_numbers):
+def Diagnosis(page, car_number):
 
     # 진단 전 차량 선택
     listCar = page.get_by_text(car_number, exact=True)
@@ -14,7 +14,7 @@ def Diagnosis(page, car_numbers):
     logging.info(f"PASS : 예약리스트 > 차량 번호 {car_number} 클릭 성공")
 
     page.get_by_role("link", name="진단 대기중").click()
-    logging.info(f"PASS : 진단 tab 진입 - {car_numbers}")
+    logging.info(f"PASS : 진단 tab 진입 - {car_number}")
 
     page.get_by_role("link", name="성능장").click()
     page.get_by_text("기타 성능장 qa").click()
@@ -36,9 +36,9 @@ def Diagnosis(page, car_numbers):
 
 
 
-    logging.info(f"PASS : 진단 Tab 완료 - {car_numbers}")
+    logging.info(f"PASS : 진단 Tab 완료 - {car_number}")
 
     # 모두 완료 후 헤더 차량번호를 눌러 예약리스트로 되돌아가기
-    page.get_by_text(car_numbers, exact=True).click()
+    page.get_by_text(car_number, exact=True).click()
     logging.info("PASS : 예약리스트 이동")
     time.sleep(2)
