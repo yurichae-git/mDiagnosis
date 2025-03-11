@@ -176,6 +176,16 @@ def VehicleInfo(page, car_number):
     logging.info("PASS : 차량정보 tab > 차량정보 완료 버튼 선택")
     time.sleep(5)
 
+
+    # 등급/연료 불일치 하는 경우 팝업
+    try:
+        gradePopup = page.locator('xpath=//*[@id="container"]/div[6]/div/div')
+        gradePopup.wait_for(state="visible", timeout=5000)
+        page.get_by_role("button", name="무시").click()
+    except PlaywrightTimeoutError:
+        logging.info("PASS : 차량정보 tab > 등급/연료 불일치 팝업 - 미노출")
+
+    # 완료 팝업
     confirmPopup = page.locator('xpath=//*[@id="Header__Xpu4w"]/button/span')
     confirmPopup.wait_for(state="visible", timeout=10000)
     if confirmPopup.count() > 0 :

@@ -19,16 +19,16 @@ def VehicleOption(page, car_number):
     logging.info(f"PASS : 옵션 tab 진입 - {car_number}")
 
 
+    # 제작일/연식 팝업
     try:
-        # 팝업이 나타날 때까지 최대 5초 대기
         ProductionPopup = page.get_by_role("button", name="확인")
         ProductionPopup.wait_for(state="visible", timeout=5000)
-
-        # 팝업이 나타나면 클릭
         ProductionPopup.click()
         logging.info("PASS : 옵션 tab > 제작일/연식 팝업 - 확인")
     except PlaywrightTimeoutError:
         logging.info("PASS : 옵션 tab > 제작일/연식 팝업 - 미노출")
+
+
 
     page.get_by_role("button", name="옵션 완료").click()
     logging.info("PASS : 옵션 tab > 옵션 완료 버튼 선택")
