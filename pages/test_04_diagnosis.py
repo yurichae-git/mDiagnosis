@@ -8,8 +8,10 @@ import time
 def Diagnosis(page, car_numbers):
 
     # 진단 전 차량 선택
-    page.get_by_text(car_numbers, exact=True).click()
-    logging.info(f"PASS : 예약리스트 > 차량 번호 {car_numbers} 클릭 성공")
+    listCar = page.get_by_text(car_number, exact=True)
+    listCar.wait_for(state="visible", timeout=10000)
+    listCar.click()
+    logging.info(f"PASS : 예약리스트 > 차량 번호 {car_number} 클릭 성공")
 
     page.get_by_role("link", name="진단 대기중").click()
     logging.info(f"PASS : 진단 tab 진입 - {car_numbers}")

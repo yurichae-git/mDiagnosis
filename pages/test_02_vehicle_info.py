@@ -8,7 +8,9 @@ from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 def VehicleInfo(page, car_number):
 
     # 진단 전 차량 선택
-    page.get_by_text(car_number, exact=True).click()
+    listCar = page.get_by_text(car_number, exact=True)
+    listCar.wait_for(state="visible", timeout=10000)
+    listCar.click()
     logging.info(f"PASS : 예약리스트 > 차량 번호 {car_number} 클릭 성공")
 
 

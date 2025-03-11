@@ -9,8 +9,9 @@ from config import car_type, owner, dealer_id
 
 def Reservation(page, car_number):
 
-
-    page.get_by_role("link", name="현장 예약").click()
+    reservation = page.get_by_role("link", name="현장 예약")
+    reservation.wait_for(state="visible", timeout=10000)
+    reservation.click()
     logging.info(f"PASS : 현장예약 시작 - {car_number}")
 
     page.get_by_text("아이디 조회").click()
@@ -50,23 +51,23 @@ def Reservation(page, car_number):
         selected_model = model.evaluate("el => el.options[el.selectedIndex].text")
         selected_detail_model = detail_model.evaluate("el => el.options[el.selectedIndex].text")
         if selected_manufacturer and selected_manufacturer != "제조사":
-            logging.info(f"PASS : 현장예약 > 제조사 / 모델 > 조회 성공 - {selected_manufacturer}")
+            logging.info(f"PASS : 현장예약 > 제조사 / 모델 > 제조사 조회 성공 - {selected_manufacturer}")
             if selected_model and selected_model == "모델":
-                # 세부모델이 조회 된 경우 옵션 리스트를 가져와서 첫번째 옵션을 선택하고, 없을 땐 에러로그
-                model.wait_for(state="enabled", timeout=10000)
+                # 모델 조회 된 경우 옵션 리스트를 가져와서 두번째 옵션을 선택(첫번째옵션은 모델 임, 없을 땐 에러로그
+
                 model_options = model.evaluate("el => Array.from(el.options).map(o => o.value)")
+                time.sleep(2)
                 if model_options and len(model_options) > 0:
-                    model.select_option(model_options[0])
-                    logging.info(f"PASS : 현장예약 > 제조사 / 모델 > 모델 조회 안된 경우 - 첫 번째 옵션 '{model_options[0]}' 선택")
+                    model.select_option(model_options[1])
+                    logging.info(f"PASS : 현장예약 > 제조사 / 모델 > 모델 조회 안된 경우 - 첫 번째 옵션 '{model_options[1]}' 선택")
                 else:
-                    logging.warning("PASS : 모 옵션이 없음")
+                    logging.warning("PASS : 모델 옵션이 없음")
             if selected_detail_model and selected_detail_model == "세부모델":
-                # 세부모델이 조회 된 경우 옵션 리스트를 가져와서 첫번째 옵션을 선택하고, 없을 땐 에러로그
-                detail_model.wait_for(state="enabled", timeout=10000)
+                time.sleep(2)
                 detail_model_options = detail_model.evaluate("el => Array.from(el.options).map(o => o.value)")
                 if detail_model_options and len(detail_model_options) > 0:
-                    detail_model.select_option(detail_model_options[0])
-                    logging.info(f"PASS : 현장예약 > 제조사 / 모델 > 세부모델 조회 안된 경우 - 첫 번째 옵션 '{detail_model_options[0]}' 선택")
+                    detail_model.select_option(detail_model_options[1])
+                    logging.info(f"PASS : 현장예약 > 제조사 / 모델 > 세부모델 조회 안된 경우 - 첫 번째 옵션 '{detail_model_options[1]}' 선택")
                 else:
                     logging.warning("PASS : 세부모델 옵션이 없음")
         else: # 제조사/모델 조회 안된 경우 지정 선택
@@ -100,8 +101,8 @@ def Reservation(page, car_number):
 
     page.get_by_text("진단등록").click()
     logging.info("PASS : 현장예약 > 상품 - 진단등록 선택")
-    page.get_by_text("홈서비스 광고이용권").click()
-    logging.info("PASS : 현장예약 > 상품 - 홈서비스 광고이용권 선택")
+    #page.get_by_text("홈서비스 광고이용권").click()
+    #logging.info("PASS : 현장예약 > 상품 - 홈서비스 광고이용권 선택")
 
 
 
