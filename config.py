@@ -29,3 +29,4 @@ car_numbers = [
 car_type = "국산"
 owner = "채유리"
 dealer_id = "yuri_C18"
+dealer_pw = "1"
