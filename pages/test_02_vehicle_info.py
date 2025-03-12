@@ -126,10 +126,10 @@ def VehicleInfo(page, car_number):
             options_count = grade_detail_select.evaluate("el => el.options.length")
             if options_count > 1:  # 첫 번째 옵션(default)을 제외하고 옵션이 있는지 확인
                 grade_detail_select.select_option("001")
-                logging.info(f"PASS : 차량정보 tab > 등급/세부등급 > 직접 선택 > 세부등급 - 첫번쨰 옵션 선택 완료 {options_count}")
+                logging.info(f"PASS : 차량정보 tab > 등급/세부등급 > 직접 선택 > 세부등급 - 첫번쨰 옵션 선택 완료")
 
             else:
-                logging.info(f"PASS : 차량정보 tab > 등급/세부등급 > 직접 선택 > 세부등급 - 선택할 수 있는 옵션이 없음{options_count}")
+                logging.info(f"PASS : 차량정보 tab > 등급/세부등급 > 직접 선택 > 세부등급 - 선택할 수 있는 옵션이 없음")
         else:
             logging.info("FAIL : 차량정보 tab > 등급/세부등급 > 직접 선택 > 세부등급 - 요소를 찾을 수 없음")
     except Exception as e:

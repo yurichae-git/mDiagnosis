@@ -38,7 +38,11 @@ def Reservation(page, car_number):
 
     page.locator("div").filter(has_text=re.compile(r"^조회$")).get_by_role("button").click()
     logging.info(f"PASS : 현장예약 > 차량정보 > 차량정보 조회 중 - {car_number}")
-    time.sleep(20)
+
+    # 차량정보 조회 로딩UI 사라진 후 체
+    loading_xpath = '//*[@id="container"]/div[1]/div/p'
+    page.wait_for_selector(loading_xpath, state="hidden", timeout=30000)
+    time.sleep(2)
 
     # 제조사/모델 조회 실패 케이스
 
