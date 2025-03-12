@@ -20,12 +20,14 @@ def Diagnosis(page, car_number):
     page.get_by_text("기타 성능장 qa").click()
     logging.info("PASS : 진단 tab > 성능/상태 점검자 > 성능장 선택")
 
-    page.get_by_role("link", name="평가사").click()
+    #평가사 있는 경우 없는 경우 분기처리 x --> xpath로 무조건 선택하도록 함
+    page.locator('xpath=//*[@id="container"]/div[5]/div[2]/a').click()
     page.get_by_role("textbox", name="평가사 검색").click()
     page.get_by_role("textbox", name="평가사 검색").fill("채유리")
     page.get_by_role("textbox", name="평가사 검색").press("Enter")
     page.get_by_text("채유리(10834)본사광고지원센터").click()
     logging.info("PASS : 진단 tab > 성능/상태 점검자 > 평가사 선택")
+
 
     page.get_by_role("button", name="진단 완료").click()
     logging.info("PASS : 진단 tab > 진단 완료 버튼 선택")
